@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Pending Registrations - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="glass-card p-4 mb-4">
+            <h2 class="card-title mb-4">
+                <i class="fas fa-user-clock me-2"></i> Pending Registrations
+            </h2>
+
+            {% if pending_details %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Username/Email</th>
+                                <th>Auth Method</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for details in pending_details %}
+                            <tr>
+                                <td>{{ details.user.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                <td>
+                                    {% if details.user.auth_method == 'manual' %}
+                                        {{ details.auth_details.username }}<br>
+                                        <small class="text-muted">{{ details.auth_details.email }}</small>
+                                    {% elif details.user.auth_method == 'github' %}
+                                        {{ details.auth_details.github_username }}<br>
+                                        <small class="text-muted">{{ details.auth_details.github_email }}</small>
+                                    {% elif details.user.auth_method == 'google' %}
+                                        {{ details.auth_details.google_username }}<br>
+                                        <small class="text-muted">{{ details.auth_details.google_email }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="auth-badge {{ details.user.auth_method }}">
+                                        {% if details.user.auth_method == 'manual' %}
+                                            <i class="fas fa-user"></i>
+                                        {% elif details.user.auth_method == 'github' %}
+                                            <i class="fab fa-github"></i>
+                                        {% elif details.user.auth_method == 'google' %}
+                                            <i class="fab fa-google"></i>
+                                        {% endif %}
+                                        {{ details.user.auth_method|title }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <form method="get" action="{{ url_for('process_registration', user_id=details.user.id, action='approve') }}" style="display:inline;">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" name="make_admin" value="true" id="make_admin_{{ details.user.id }}">
+                                                <label class="form-check-label" for="make_admin_{{ details.user.id }}">Promote to Admin</label>
+                                            </div>
+                                            <button type="submit" class="btn btn-success btn-sm ms-2" onclick="return confirm('Are you sure you want to approve this registration?')">
+                                                <i class="fas fa-check"></i> Approve
+                                            </button>
+                                        </form>
+                                        <a href="{{ url_for('process_registration', user_id=details.user.id, action='decline') }}" 
+                                           class="btn btn-danger btn-sm ms-2"
+                                           onclick="return confirm('Are you sure you want to decline this registration?')">
+                                            <i class="fas fa-times"></i> Decline
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+                    <h4>No Pending Registrations</h4>
+                    <p class="text-muted">There are currently no pending registration requests to review.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

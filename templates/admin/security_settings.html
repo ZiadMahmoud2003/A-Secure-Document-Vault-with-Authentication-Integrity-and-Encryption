@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+
+{% block title %}Security Settings - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="row min-vh-100">
+    <!-- Sidebar -->
+    <div class="col-md-3 col-lg-3 d-flex flex-column align-items-start">
+        <div class="glass-card sidebar-modern p-4 mt-4 mb-4">
+            <ul class="nav flex-column w-100">
+                <li class="nav-item mb-3">
+                    <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a class="nav-link" href="{{ url_for('manage_users') }}">
+                        <i class="fas fa-users me-2"></i>Manage Users
+                    </a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a class="nav-link" href="{{ url_for('view_logs') }}">
+                        <i class="fas fa-list-alt me-2"></i>View Logs
+                    </a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a class="nav-link" href="{{ url_for('pending_registrations') }}">
+                        <i class="fas fa-user-clock me-2"></i>Pending Registrations
+                    </a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a class="nav-link active" href="{{ url_for('security_settings') }}">
+                        <i class="fas fa-shield-alt me-2"></i>Security Settings
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="col-md-9 col-lg-9">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4">
+            <h1 class="h2 dashboard-title">Security Settings</h1>
+        </div>
+
+        <div class="row">
+            <!-- Password Policy -->
+            <div class="col-12 col-lg-6 mb-5">
+                <div class="glass-card p-4" style="transition:none; animation:none;">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-key me-2"></i>Password Policy
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('update_password_policy') }}" method="POST">
+                            <div class="mb-3">
+                                <label class="form-label">Minimum Password Length</label>
+                                <input type="number" class="form-control" name="min_length" 
+                                       value="{{ settings.min_password_length }}" min="8" max="32">
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="require_uppercase" 
+                                           id="requireUppercase" {% if settings.require_uppercase %}checked{% endif %}>
+                                    <label class="form-check-label" for="requireUppercase">
+                                        Require Uppercase Letters
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="require_numbers" 
+                                           id="requireNumbers" {% if settings.require_numbers %}checked{% endif %}>
+                                    <label class="form-check-label" for="requireNumbers">
+                                        Require Numbers
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="require_special" 
+                                           id="requireSpecial" {% if settings.require_special %}checked{% endif %}>
+                                    <label class="form-check-label" for="requireSpecial">
+                                        Require Special Characters
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Password Policy</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Security -->
+            <div class="col-12 col-lg-6 mb-5">
+                <div class="glass-card p-4" style="transition:none; animation:none;">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-lock me-2"></i>Login Security
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ url_for('update_login_security') }}" method="POST">
+                            <div class="mb-3">
+                                <label class="form-label">Max Failed Login Attempts</label>
+                                <input type="number" class="form-control" name="max_attempts" 
+                                       value="{{ settings.max_login_attempts }}" min="3" max="10">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Account Lockout Duration (minutes)</label>
+                                <input type="number" class="form-control" name="lockout_duration" 
+                                       value="{{ settings.lockout_duration }}" min="5" max="60">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Session Timeout (minutes)</label>
+                                <input type="number" class="form-control" name="session_timeout" 
+                                       value="{{ settings.session_timeout }}" min="5" max="120">
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" name="enforce_2fa" 
+                                       id="enforce2FA" {% if settings.enforce_2fa %}checked{% endif %}>
+                                <label class="form-check-label" for="enforce2FA">
+                                    Enforce 2FA for All Users
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update Login Security</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OAuth Settings -->
+            <div class="col-12 mb-4">
+                <div class="glass-card p-4" style="transition:none; animation:none;">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-plug me-2"></i>OAuth Providers
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <!-- GitHub OAuth -->
+                            <div class="col-12 col-md-6 col-lg-4 mb-4 d-flex">
+                                <div class="glass-card flex-fill p-4" style="transition:none; animation:none; min-width:320px;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="fab fa-github me-2"></i>GitHub
+                                        </h5>
+                                        <form action="{{ url_for('update_github_oauth') }}" method="POST">
+                                            <div class="mb-3">
+                                                <label class="form-label">Client ID</label>
+                                                <input type="text" class="form-control" name="github_client_id" 
+                                                       value="{{ settings.github_client_id }}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Client Secret</label>
+                                                <input type="password" class="form-control" name="github_client_secret" 
+                                                       value="{{ settings.github_client_secret }}">
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" name="github_enabled" 
+                                                       id="githubEnabled" {% if settings.github_enabled %}checked{% endif %}>
+                                                <label class="form-check-label" for="githubEnabled">
+                                                    Enable GitHub OAuth
+                                                </label>
+                                            </div>
+                                            <button type="submit" class="btn btn-dark">Update GitHub Settings</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Google OAuth -->
+                            <div class="col-12 col-md-6 col-lg-4 mb-4 d-flex">
+                                <div class="glass-card flex-fill p-4" style="transition:none; animation:none; min-width:320px;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="fab fa-google me-2"></i>Google
+                                        </h5>
+                                        <form action="{{ url_for('update_google_oauth') }}" method="POST">
+                                            <div class="mb-3">
+                                                <label class="form-label">Client ID</label>
+                                                <input type="text" class="form-control" name="google_client_id" 
+                                                       value="{{ settings.google_client_id }}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Client Secret</label>
+                                                <input type="password" class="form-control" name="google_client_secret" 
+                                                       value="{{ settings.google_client_secret }}">
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" name="google_enabled" 
+                                                       id="googleEnabled" {% if settings.google_enabled %}checked{% endif %}>
+                                                <label class="form-check-label" for="googleEnabled">
+                                                    Enable Google OAuth
+                                                </label>
+                                            </div>
+                                            <button type="submit" class="btn btn-danger">Update Google Settings</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Auth0 OAuth -->
+                            <div class="col-12 col-md-6 col-lg-4 mb-4 d-flex">
+                                <div class="glass-card flex-fill p-4" style="transition:none; animation:none; min-width:320px;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-universal-access me-2"></i>Auth0
+                                        </h5>
+                                        <form action="{{ url_for('update_auth0_oauth') }}" method="POST">
+                                            <div class="mb-3">
+                                                <label class="form-label">Domain</label>
+                                                <input type="text" class="form-control" name="auth0_domain" 
+                                                       value="{{ settings.auth0_domain }}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Client ID</label>
+                                                <input type="text" class="form-control" name="auth0_client_id" 
+                                                       value="{{ settings.auth0_client_id }}">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Client Secret</label>
+                                                <input type="password" class="form-control" name="auth0_client_secret" 
+                                                       value="{{ settings.auth0_client_secret }}">
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="checkbox" name="auth0_enabled" 
+                                                       id="auth0Enabled" {% if settings.auth0_enabled %}checked{% endif %}>
+                                                <label class="form-check-label" for="auth0Enabled">
+                                                    Enable Auth0 OAuth
+                                                </label>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Update Auth0 Settings</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

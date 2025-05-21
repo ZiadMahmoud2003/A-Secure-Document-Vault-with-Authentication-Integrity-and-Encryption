@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Edit User Role{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="glass-card p-4 mb-4">
+            <h2 class="text-center mb-4">Edit User #{{ user.id }}</h2>
+
+            <form method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Role</label>
+                    <select name="role" class="form-select" required {% if user.role == 'admin' and not (session['user_id'] == 1 or user.parent_admin_id == session['user_id']) %}disabled{% endif %}>
+                        <option value="user" {% if user.role == 'user' %}selected{% endif %}>User</option>
+                        <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+                    </select>
+                </div>
+                
+                {% if user.role == 'user' %}
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="promoteToAdmin" name="promote_to_admin" value="true">
+                    <label class="form-check-label" for="promoteToAdmin">Promote to Admin</label>
+                </div>
+                {% endif %}
+
+                {% if manual_auth %}
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" value="{{ manual_auth.email }}" disabled>
+                </div>
+                {% endif %}
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{{ url_for('manage_users') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                    <button type="submit" class="btn btn-success">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

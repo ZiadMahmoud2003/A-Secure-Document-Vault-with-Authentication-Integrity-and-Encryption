@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="row min-vh-100">
+    <!-- Sidebar -->
+    <div class="col-md-3 col-lg-3 d-flex flex-column align-items-start">
+        <div class="glass-card sidebar-modern p-4 mt-4 mb-4">
+            <ul class="nav flex-column w-100">
+                <li class="nav-item mb-3">
+                    <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a class="nav-link active" href="{{ url_for('manage_users') }}">
+                        <i class="fas fa-users me-2"></i>Manage Users
+                    </a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a class="nav-link" href="{{ url_for('view_logs') }}">
+                        <i class="fas fa-list-alt me-2"></i>View Logs
+                    </a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a class="nav-link" href="{{ url_for('pending_registrations') }}">
+                        <i class="fas fa-user-clock me-2"></i>Pending Registrations
+                    </a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a class="nav-link" href="{{ url_for('security_settings') }}">
+                        <i class="fas fa-shield-alt me-2"></i>Security Settings
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="col-md-9 col-lg-9">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4">
+            <h1 class="h2 dashboard-title">Manage Users</h1>
+        </div>
+
+        <div class="glass-card p-4 mb-4">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username/Email</th>
+                            <th>Auth Method</th>
+                            <th>Role</th>
+                            <th>2FA Status</th>
+                            <th>Account Status</th>
+                            <th>Created At</th>
+                            <th>Parent Admin</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>
+                                    {% if user.auth_method == 'manual' %}
+                                        {% set auth = user.manual_auth.first() %}
+                                        {% if auth %}
+                                            {{ auth.username }} <br>
+                                            <small class="text-muted">{{ auth.email }}</small>
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    {% elif user.auth_method == 'github' %}
+                                        {% set auth = user.github_auth.first() %}
+                                        {% if auth %}
+                                            {{ auth.github_username }} <br>
+                                            <small class="text-muted">{{ auth.github_email }}</small>
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    {% elif user.auth_method == 'google' %}
+                                        {% set auth = user.google_auth.first() %}
+                                        {% if auth %}
+                                            {{ auth.google_username }} <br>
+                                            <small class="text-muted">{{ auth.google_email }}</small>
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ 'primary' if user.auth_method == 'manual' 
+                                        else 'dark' if user.auth_method == 'github'
+                                        else 'danger' if user.auth_method == 'google'
+                                        else 'secondary' }}">
+                                        {{ user.auth_method }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ 'danger' if user.role == 'admin' else 'success' }}">
+                                        {{ user.role }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if user.twofa_secret %}
+                                        <span class="badge bg-success">Enabled</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Disabled</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if user.is_active %}
+                                        <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                <td>
+                                    {% if user.parent_admin_id == 1 %}
+                                        Root
+                                    {% elif user.parent_admin_id %}
+                                        {% set parent = users|selectattr('id', 'equalto', user.parent_admin_id)|first %}
+                                        {% if parent %}
+                                            {% if parent.auth_method == 'manual' %}
+                                                {{ parent.manual_auth.first().username if parent.manual_auth.first() else 'Unknown' }}
+                                            {% elif parent.auth_method == 'github' %}
+                                                {{ parent.github_auth.first().github_username if parent.github_auth.first() else 'Unknown' }}
+                                            {% elif parent.auth_method == 'google' %}
+                                                {{ parent.google_auth.first().google_username if parent.google_auth.first() else 'Unknown' }}
+                                            {% elif parent.auth_method == 'auth0' %}
+                                                {{ parent.okta_auth.first().okta_name if parent.okta_auth.first() else 'Unknown' }}
+                                            {% else %}
+                                                Unknown
+                                            {% endif %}
+                                        {% else %}
+                                            Unknown
+                                        {% endif %}
+                                    {% else %}
+                                        None
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <!-- Edit -->
+                                        <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <!-- Activate/Deactivate -->
+                                        {% if not user.is_admin %}
+                                            {% if user.is_active %}
+                                                <a href="{{ url_for('deactivate_user', user_id=user.id) }}" class="btn btn-sm btn-outline-warning" onclick="return confirm('Are you sure you want to deactivate this user?');">
+                                                    <i class="fas fa-user-slash"></i>
+                                                </a>
+                                            {% else %}
+                                                <a href="{{ url_for('activate_user', user_id=user.id) }}" class="btn btn-sm btn-outline-success" onclick="return confirm('Are you sure you want to activate this user?');">
+                                                    <i class="fas fa-user-check"></i>
+                                                </a>
+                                            {% endif %}
+                                        {% endif %}
+                                        <!-- Delete -->
+                                        {% if not user.is_admin %}
+                                        <a href="{{ url_for('delete_user', user_id=user.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this user?');">
+                                            <i class="fas fa-trash" style="color: #dc3545;"></i>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

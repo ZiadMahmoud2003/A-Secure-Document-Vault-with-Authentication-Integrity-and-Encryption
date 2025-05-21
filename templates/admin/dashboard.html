@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="row min-vh-100">
+    <!-- Sidebar -->
+    <div class="col-md-3 col-lg-3 d-flex flex-column align-items-start">
+        <div class="glass-card sidebar-modern p-4 mt-4 mb-4">
+            <ul class="nav flex-column w-100">
+                <li class="nav-item mb-3">
+                    <a class="nav-link active" href="{{ url_for('admin_dashboard') }}">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a class="nav-link" href="{{ url_for('manage_users') }}">
+                        <i class="fas fa-users me-2"></i>Manage Users
+                    </a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a class="nav-link" href="{{ url_for('view_logs') }}">
+                        <i class="fas fa-list-alt me-2"></i>View Logs
+                    </a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a class="nav-link" href="{{ url_for('pending_registrations') }}">
+                        <i class="fas fa-user-clock me-2"></i>Pending Registrations
+                    </a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a class="nav-link" href="{{ url_for('security_settings') }}">
+                        <i class="fas fa-shield-alt me-2"></i>Security Settings
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="col-md-9 col-lg-9">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4">
+            <h1 class="h2 dashboard-title">Admin Dashboard</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group me-2">
+                    <a href="{{ url_for('pending_registrations') }}" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-user-clock me-1"></i> Pending Registrations
+                        {% if pending_count %}
+                        <span class="badge bg-danger ms-1">{{ pending_count }}</span>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mb-5">
+            <div class="col">
+                <div class="glass-card h-100 p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-0">Total Users</h6>
+                            <h2 class="my-2">{{ total_users }}</h2>
+                        </div>
+                        <div class="stat-icon text-primary">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="glass-card h-100 p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-0">2FA Enabled</h6>
+                            <h2 class="my-2">{{ twofa_users }}</h2>
+                        </div>
+                        <div class="stat-icon text-success">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="glass-card h-100 p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-0">Pending Users</h6>
+                            <h2 class="my-2">{{ pending_count }}</h2>
+                        </div>
+                        <div class="stat-icon text-warning">
+                            <i class="fas fa-user-clock"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="glass-card h-100 p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-title mb-0">Today's Logins</h6>
+                            <h2 class="my-2">{{ todays_logins }}</h2>
+                        </div>
+                        <div class="stat-icon text-info">
+                            <i class="fas fa-sign-in-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Stats Cards -->
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            <div class="col">
+                <div class="glass-card h-100 p-3">
+                    <h6 class="card-title mb-0">Total Documents</h6>
+                    <h2 class="my-2">{{ total_documents }}</h2>
+                </div>
+            </div>
+            <div class="col">
+                <div class="glass-card h-100 p-3">
+                    <h6 class="card-title mb-0">Documents Today</h6>
+                    <h2 class="my-2">{{ documents_today }}</h2>
+                </div>
+            </div>
+            <div class="col">
+                <div class="glass-card h-100 p-3">
+                    <h6 class="card-title mb-0">Documents This Month</h6>
+                    <h2 class="my-2">{{ documents_this_month }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mb-5">
+            <div class="col-lg-8 mb-4">
+                <div class="glass-card p-4">
+                    <h5 class="mb-3">Document Uploads (Last 30 Days)</h5>
+                    <canvas id="uploadsLineChart" height="120"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="glass-card p-4">
+                    <h5 class="mb-3">File Type Distribution</h5>
+                    <canvas id="fileTypePieChart" height="120"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="row">
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Recent Login Activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th>Time</th>
+                                        <th>Method</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for log in recent_logs %}
+                                    <tr>
+                                        <td>{{ log.user_id }}</td>
+                                        <td>{{ log.login_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ 'primary' if log.auth_method == 'manual' 
+                                                else 'dark' if log.auth_method == 'github'
+                                                else 'danger' if log.auth_method == 'google'
+                                                else 'secondary' }}">
+                                                {{ log.auth_method }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ 'success' if log.twofa_used else 'warning' }}">
+                                                {{ '2FA' if log.twofa_used else 'Basic' }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6 mb-4">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Authentication Methods</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td>Manual Authentication</td>
+                                        <td>{{ auth_stats.manual }}</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-primary" role="progressbar" 
+                                                     style="width: {{ ((auth_stats.manual / total_users * 100)|round(1)) ~ '%' }}"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>GitHub OAuth</td>
+                                        <td>{{ auth_stats.github }}</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-dark" role="progressbar" 
+                                                     style="width: {{ ((auth_stats.github / total_users * 100)|round(1)) ~ '%' }}"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Google OAuth</td>
+                                        <td>{{ auth_stats.google }}</td>
+                                        <td>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-danger" role="progressbar" 
+                                                     style="width: {{ ((auth_stats.google / total_users * 100)|round(1)) ~ '%' }}"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="text/javascript">
+const uploadsData = {
+    labels: {{ uploads_per_day|map(attribute='date')|list|tojson|safe }},
+    datasets: [{
+        label: 'Uploads',
+        data: {{ uploads_per_day|map(attribute='count')|list|tojson|safe }},
+        fill: true,
+        backgroundColor: 'rgba(33,150,243,0.08)',
+        borderColor: 'rgba(33,150,243,1)',
+        tension: 0.3,
+        pointRadius: 3,
+        pointBackgroundColor: 'rgba(33,150,243,1)'
+    }]
+};
+new Chart(document.getElementById('uploadsLineChart'), {
+    type: 'line',
+    data: uploadsData,
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { x: { display: true }, y: { beginAtZero: true } }
+    }
+});
+const fileTypeData = {
+    labels: Object.keys({{ file_type_counts|tojson|safe }}),
+    datasets: [{
+        data: Object.values({{ file_type_counts|tojson|safe }}),
+        backgroundColor: [
+            'rgba(33,150,243,0.8)',
+            'rgba(76,175,80,0.8)',
+            'rgba(255,193,7,0.8)'
+        ]
+    }]
+};
+new Chart(document.getElementById('fileTypePieChart'), {
+    type: 'pie',
+    data: fileTypeData,
+    options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } }
+    }
+});
+</script>
+{% endblock %}
