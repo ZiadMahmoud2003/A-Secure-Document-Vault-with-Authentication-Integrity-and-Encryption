@@ -115,7 +115,8 @@ This project is a Flask-based web application designed to provide a secure platf
 
 ```markdown
 ### Login Page
-![login](https://github.com/user-attachments/assets/d984126c-4738-4c85-a0ee-0bac64279c47)
+![login](https://github.com/user-attachments/assets/b28f0221-36ef-4f43-bf20-3179f9c88749)
+
 
 ### Signup
 ![Sign Up](https://github.com/user-attachments/assets/178542f5-9776-40a2-a5e1-41bdec601632)
