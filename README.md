@@ -42,7 +42,7 @@ This project is a Flask-based web application designed to provide a secure platf
 
 1.  **Clone the repository:**
     ```bash
-    git clone 
+    git clone https://github.com/ZiadMahmoud2003/A-Secure-Document-Vault-with-Authentication-Integrity-and-Encryption.git
     cd Data-Integrity-Project-final-test
     ```
 2.  **Set up the Python Virtual Environment:**
@@ -113,7 +113,7 @@ This project is a Flask-based web application designed to provide a secure platf
 ## Screenshots
 
 
-```markdown
+
 ### Login Page
 ![login](https://github.com/user-attachments/assets/b28f0221-36ef-4f43-bf20-3179f9c88749)
 
@@ -145,7 +145,7 @@ This project is a Flask-based web application designed to provide a secure platf
 ### Securit_setting
 ![Security Setting](https://github.com/user-attachments/assets/05975c26-71bf-4cab-8f81-e700a82e3d23)
 
-```
+
 
 
 
