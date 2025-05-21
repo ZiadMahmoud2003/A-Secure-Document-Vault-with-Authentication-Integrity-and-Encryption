@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - Flask Auth App{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4 slide-up">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4">
+                    <i class="fas fa-user-plus me-2"></i>Sign Up
+                </h2>
+                
+                <form method="POST" action="{{ url_for('signup') }}" id="signupForm">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">
+                            <i class="fas fa-user me-1"></i>Username
+                        </label>
+                        <input type="text" class="form-control" id="username" name="username" required
+                               minlength="3" maxlength="50">
+                        <div class="form-text">Username must be between 3 and 50 characters.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">
+                            <i class="fas fa-envelope me-1"></i>Email address
+                        </label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                        <div class="form-text">We'll never share your email with anyone else.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">
+                            <i class="fas fa-key me-1"></i>Password
+                        </label>
+                        <input type="password" class="form-control" id="password" name="password" required
+                               minlength="8">
+                        <div class="password-requirements">
+                            <div class="requirement" id="length">
+                                <i class="fas fa-circle"></i> At least 8 characters
+                            </div>
+                            <div class="requirement" id="uppercase">
+                                <i class="fas fa-circle"></i> At least one uppercase letter
+                            </div>
+                            <div class="requirement" id="lowercase">
+                                <i class="fas fa-circle"></i> At least one lowercase letter
+                            </div>
+                            <div class="requirement" id="number">
+                                <i class="fas fa-circle"></i> At least one number
+                            </div>
+                            <div class="requirement" id="special">
+                                <i class="fas fa-circle"></i> At least one special character
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label">
+                            <i class="fas fa-check-circle me-1"></i>Confirm Password
+                        </label>
+                        <input type="password" class="form-control" id="confirm_password" required>
+                        <div class="form-text text-danger d-none" id="password-match-error">
+                            Passwords do not match
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100" id="submitBtn" disabled>
+                        <i class="fas fa-user-plus me-1"></i>Sign Up
+                    </button>
+                </form>
+                
+                <div class="text-center mt-3">
+                    <p class="mb-0">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirm_password');
+        const submitBtn = document.getElementById('submitBtn');
+        const passwordMatchError = document.getElementById('password-match-error');
+        const requirements = {
+            length: str => str.length >= 8,
+            uppercase: str => /[A-Z]/.test(str),
+            lowercase: str => /[a-z]/.test(str),
+            number: str => /[0-9]/.test(str),
+            special: str => /[!@#$%^&*()_+\-=\[\]{};:,.<>?~]/.test(str)
+        };
+
+        function updateRequirements(password) {
+            let allMet = true;
+            for (let [req, checkFn] of Object.entries(requirements)) {
+                const element = document.getElementById(req);
+                const met = checkFn(password);
+                element.classList.toggle('met', met);
+                element.classList.toggle('unmet', !met);
+                element.querySelector('i').className = met ? 'fas fa-check-circle' : 'fas fa-times-circle';
+                if (!met) allMet = false;
+            }
+            return allMet;
+        }
+
+        function validateForm() {
+            const passwordsMatch = password.value === confirmPassword.value;
+            const requirementsMet = updateRequirements(password.value);
+            
+            passwordMatchError.classList.toggle('d-none', passwordsMatch);
+            submitBtn.disabled = !passwordsMatch || !requirementsMet;
+        }
+
+        password.addEventListener('input', validateForm);
+        confirmPassword.addEventListener('input', validateForm);
+
+        // Check for username availability
+        const username = document.getElementById('username');
+        let usernameTimeout;
+
+        username.addEventListener('input', function() {
+            clearTimeout(usernameTimeout);
+            usernameTimeout = setTimeout(function() {
+                if (username.value.length >= 3) {
+                    fetch(`/api/check_username/${username.value}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            username.classList.toggle('is-valid', data.available);
+                            username.classList.toggle('is-invalid', !data.available);
+                        });
+                }
+            }, 500);
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}

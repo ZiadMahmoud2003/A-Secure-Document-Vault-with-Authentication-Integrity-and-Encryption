@@ -1,0 +1,113 @@
+ {% extends "base.html" %}
+
+{% block title %}@index.html{% endblock %}
+
+{% block content %}
+<style>
+.hero-btn {
+    background: linear-gradient(90deg, var(--primary-500), var(--primary-700));
+    color: #fff !important;
+    border: none;
+    box-shadow: 0 2px 8px rgba(33,150,243,0.10);
+    transition: background 0.2s, box-shadow 0.2s;
+    border-radius: 32px !important;
+    font-weight: 600;
+    padding: 0.75rem 2.5rem;
+    font-size: 1.15rem;
+    letter-spacing: 0.5px;
+}
+.hero-btn:hover, .hero-btn:focus {
+    background: linear-gradient(90deg, var(--primary-700), var(--primary-900));
+    color: #fff !important;
+    box-shadow: 0 4px 16px rgba(33,150,243,0.18);
+}
+
+.hero-title, .hero-desc, .hero-subdesc, .hero-icon {
+    color: #fff;
+    text-shadow: 0 2px 8px #18518a, 0 0px 2px #000;
+}
+.hero-desc, .hero-subdesc {
+    color: #e3f2fd;
+    text-shadow: 0 1px 6px #18518a;
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+.hero-desc {
+    margin-bottom: 0.3rem;
+}
+.hero-icon {
+    color: var(--primary-600);
+}
+[data-bs-theme="light"] .hero-title {
+    color: #18518a !important;
+    text-shadow: 0 2px 8px #b3e5fc, 0 0px 2px #fff;
+}
+[data-bs-theme="light"] .hero-desc, [data-bs-theme="light"] .hero-subdesc {
+    color: #18518a !important;
+    font-weight: 400 !important;
+    font-size: 1.1rem !important;
+    text-shadow: none !important;
+}
+[data-bs-theme="light"] .hero-icon {
+    color: var(--primary-700) !important;
+}
+
+.glass-card.theme-adapt {
+    background: rgba(30,41,59,0.85);
+    color: #fff;
+    transition: background 0.2s, color 0.2s;
+}
+[data-bs-theme="light"] .glass-card.theme-adapt {
+    background: rgba(255,255,255,0.92) !important;
+    color: #18518a !important;
+    box-shadow: 0 4px 24px 0 rgba(21,101,192,0.10);
+}
+[data-bs-theme="light"] .glass-card.theme-adapt h5, [data-bs-theme="light"] .glass-card.theme-adapt p, [data-bs-theme="light"] .glass-card.theme-adapt i {
+    color: #1976d2 !important;
+}
+[data-bs-theme="dark"] .glass-card.theme-adapt h5, [data-bs-theme="dark"] .glass-card.theme-adapt p, [data-bs-theme="dark"] .glass-card.theme-adapt i {
+    color: #42a5f5 !important;
+}
+</style>
+<div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 80vh;">
+    <div class="text-center mb-5" style="z-index:2; position:relative;">
+        <div class="hero-icon" style="font-size: 4rem;">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+        <h1 class="fw-bold mb-3 hero-title" style="font-size: 3rem;">Secure Document Hub</h1>
+        <p class="lead hero-desc">
+            The ultimate platform for storing, sharing, and verifying your documents securely.
+        </p>
+        <p class="hero-subdesc">
+            Protect your data, collaborate with confidence, and ensure integrity at every step.
+        </p>
+        <div class="mt-4 mb-2 d-flex justify-content-center gap-3">
+            <a href="{{ url_for('login') }}" class="btn btn-lg px-5 me-2 hero-btn"><i class="fas fa-sign-in-alt me-2"></i>Login</a>
+            <a href="{{ url_for('signup') }}" class="btn btn-lg px-5 hero-btn"><i class="fas fa-user-plus me-2"></i>Sign Up</a>
+        </div>
+    </div>
+    <div class="row w-100 justify-content-center" style="max-width: 900px;">
+        <div class="col-md-4 mb-4">
+            <div class="glass-card theme-adapt p-4 h-100 text-center">
+                <div style="font-size: 2rem;"><i class="fas fa-lock"></i></div>
+                <h5 class="fw-bold mt-3 mb-2">Secure Storage</h5>
+                <p>Your documents are encrypted and protected with advanced security measures.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="glass-card theme-adapt p-4 h-100 text-center">
+                <div style="font-size: 2rem;"><i class="fas fa-share-alt"></i></div>
+                <h5 class="fw-bold mt-3 mb-2">Easy Sharing</h5>
+                <p>Share files with others instantly and control access with a single click.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="glass-card theme-adapt p-4 h-100 text-center">
+                <div style="font-size: 2rem;"><i class="fas fa-fingerprint"></i></div>
+                <h5 class="fw-bold mt-3 mb-2">Integrity Verification</h5>
+                <p>Every document is verified for authenticity and integrity, always.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

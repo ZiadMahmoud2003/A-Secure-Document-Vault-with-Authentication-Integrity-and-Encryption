@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Document - Flask Auth App{% endblock %}
+
+{% block content %}
+<div class="glass-card slide-up">
+    <div class="card-body">
+        <h1 class="card-title mb-4">
+            <i class="fas fa-upload me-2"></i>Upload Document
+        </h1>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="document" class="form-label">
+                    <i class="fas fa-file me-1"></i>Select Document
+                </label>
+                <input type="file" class="form-control" id="document" name="document" 
+                       accept=".pdf,.docx,.txt" required>
+                <div class="form-text">Allowed file types: PDF, DOCX, TXT (Max size: 20MB)</div>
+            </div>
+            <div class="mb-3">
+                <label for="filename" class="form-label">Custom filename (optional):</label>
+                <input type="text" class="form-control" name="filename" id="filename" placeholder="Enter custom filename">
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description (optional):</label>
+                <textarea class="form-control" name="description" id="description" placeholder="Enter document description" rows="4"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-cloud-upload-alt me-1"></i>Upload
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

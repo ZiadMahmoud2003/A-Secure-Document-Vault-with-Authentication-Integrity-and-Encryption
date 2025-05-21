@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Flask Auth App{% endblock %}
+
+{% block content %}
+<div class="row slide-up">
+    <div class="col-md-4">
+        <div class="card mb-4 glass-card">
+            <div class="card-body">
+                <h4 class="card-title">
+                    <i class="fas fa-user-circle me-2" style="color: var(--primary-600);"></i>Profile Information
+                </h4>
+                <div class="mb-3">
+                    <strong>Username:</strong> {{ username }}
+                    <span class="auth-badge {{ auth_method }}">
+                        {% if auth_method == 'manual' %}
+                            <i class="fas fa-user"></i>
+                        {% elif auth_method == 'github' %}
+                            <i class="fab fa-github"></i>
+                        {% elif auth_method == 'google' %}
+                            <i class="fab fa-google"></i>
+                        {% endif %}
+                        {{ auth_method|title }}
+                    </span>
+                    <span class="role-badge {{ role }}">
+                        <i class="fas {% if role == 'admin' %}fa-user-shield{% else %}fa-user{% endif %}"></i>
+                        {{ role|title }}
+                    </span>
+                </div>
+                <div class="mb-3">
+                    <strong>Account Created:</strong><br>
+                    {{ created_at.strftime('%Y-%m-%d %H:%M:%S UTC') }}
+                </div>
+                <div>
+                    <strong>2FA Status:</strong><br>
+                    <span class="text-success">
+                        <i class="fas fa-shield-alt"></i> Enabled
+                    </span>
+                </div>
+                <div class="mt-3">
+                    <a href="{{ url_for('profile') }}" class="btn btn-primary" style="background-color: var(--primary-600); border-color: var(--primary-600);">
+                        <i class="fas fa-edit me-2"></i>Edit Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% if is_admin %}
+        <div class="card mb-4 glass-card">
+            <div class="card-body">
+                <h4 class="card-title">
+                    <i class="fas fa-shield-alt me-2" style="color: var(--danger-color);"></i> Admin Quick Actions
+                </h4>
+                <div class="list-group">
+                    <a href="{{ url_for('manage_users') }}" class="list-group-item list-group-item-action" style="background-color: rgba(0, 180, 216, 0.1);">
+                        <i class="fas fa-users me-2" style="color: var(--primary-600);"></i> Manage Users
+                    </a>
+                    <a href="{{ url_for('view_logs') }}" class="list-group-item list-group-item-action" style="background-color: rgba(0, 180, 216, 0.1);">
+                        <i class="fas fa-list me-2" style="color: var(--primary-600);"></i> View All Logs
+                    </a>
+                    <a href="{{ url_for('security_settings') }}" class="list-group-item list-group-item-action" style="background-color: rgba(0, 180, 216, 0.1);">
+                        <i class="fas fa-lock me-2" style="color: var(--primary-600);"></i> Security Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-8">
+        <div class="card glass-card">
+            <div class="card-body">
+                <h4 class="card-title">
+                    <i class="fas fa-history me-2" style="color: var(--primary-600);"></i>Recent Login Activity
+                </h4>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th style="color: var(--primary-700);">Date & Time</th>
+                                <th style="color: var(--primary-700);">IP Address</th>
+                                <th style="color: var(--primary-700);">Browser</th>
+                                <th style="color: var(--primary-700);">Method</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in recent_logs %}
+                            <tr>
+                                <td>{{ log.login_timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                <td>{{ log.ip_address }}</td>
+                                <td>{{ log.user_agent.split(')')[0].split('(')[1] if '(' in log.user_agent else log.user_agent }}</td>
+                                <td>
+                                    <span class="auth-badge {{ log.auth_method }}">
+                                        {% if log.auth_method == 'manual' %}
+                                            <i class="fas fa-user"></i>
+                                        {% elif log.auth_method == 'github' %}
+                                            <i class="fab fa-github"></i>
+                                        {% elif log.auth_method == 'google' %}
+                                            <i class="fab fa-google"></i>
+                                        {% endif %}
+                                        {{ log.auth_method|title }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Custom styles for home page */
+    .auth-badge {
+        font-size: 0.8em;
+        padding: 0.3em 0.6em;
+        border-radius: 1em;
+        margin-left: 0.5em;
+    }
+    
+    .auth-badge.manual {
+        background-color: rgba(0, 180, 216, 0.2);
+        border: 1px solid var(--primary-500);
+        color: var(--primary-600);
+    }
+    
+    .auth-badge.github {
+        background-color: rgba(36, 41, 46, 0.2);
+        border: 1px solid #24292e;
+        color: #24292e;
+    }
+    
+    .auth-badge.google {
+        background-color: rgba(219, 68, 55, 0.2);
+        border: 1px solid #db4437;
+        color: #db4437;
+    }
+    
+    .role-badge {
+        font-size: 0.8em;
+        padding: 0.3em 0.6em;
+        border-radius: 1em;
+        margin-left: 0.5em;
+    }
+    
+    .role-badge.user {
+        background-color: rgba(42, 157, 143, 0.2);
+        border: 1px solid var(--success-color);
+        color: var(--success-color);
+    }
+    
+    .role-badge.admin {
+        background-color: rgba(231, 111, 81, 0.2);
+        border: 1px solid var(--danger-color);
+        color: var(--danger-color);
+    }
+    
+    .slide-up {
+        animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 180, 216, 0.1);
+    }
+</style>
+{% endblock %}
