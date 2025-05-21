@@ -1,0 +1,47 @@
+2025-05-18 13:27:05,544 - werkzeug - WARNING -  * Debugger is active!
+2025-05-18 13:27:05,544 - werkzeug - INFO -  * Debugger PIN: 688-591-758
+2025-05-18 13:27:35,142 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Lenovo\\Documents\\data-v1\\data-v1\\Data-Integrity-Project-v1\\Data-Integrity-Project-v2\\app.py', reloading
+2025-05-18 13:27:44,742 - werkzeug - WARNING -  * Debugger is active!
+2025-05-18 13:27:44,744 - werkzeug - INFO -  * Debugger PIN: 688-591-758
+2025-05-18 13:30:25,174 - __main__ - DEBUG - Session state before route edit_user: {'_permanent': True, 'auth_method': 'manual', 'twofa_verified': True, 'user_id': 1}
+2025-05-18 13:30:25,180 - __main__ - ERROR - Unexpected error in edit_user for user_id=14: edit_user.html
+2025-05-18 13:30:25,182 - werkzeug - INFO - 127.0.0.1 - - [18/May/2025 13:30:25] "[32mGET /admin/user/14/edit HTTP/1.1[0m" 302 -
+2025-05-18 13:30:25,433 - __main__ - DEBUG - Session state before route manage_users: {'_flashes': [('error', 'Unexpected error while editing user.')], '_permanent': True, 'auth_method': 'manual', 'twofa_verified': True, 'user_id': 1}
+2025-05-18 13:30:25,457 - werkzeug - INFO - 127.0.0.1 - - [18/May/2025 13:30:25] "GET /admin/users HTTP/1.1" 200 -
+2025-05-18 13:34:55,937 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-18 13:34:55,937 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-18 13:34:55,937 - werkzeug - INFO -  * Restarting with stat
+2025-05-18 13:35:05,235 - werkzeug - WARNING -  * Debugger is active!
+2025-05-18 13:35:05,241 - werkzeug - INFO -  * Debugger PIN: 688-591-758
+2025-05-18 13:37:39,619 - werkzeug - INFO - 127.0.0.1 - - [18/May/2025 13:37:39] "GET / HTTP/1.1" 200 -
+2025-05-18 13:37:42,001 - __main__ - DEBUG - Session state before route manage_users: {'_permanent': True, 'auth_method': 'manual', 'twofa_verified': True, 'user_id': 1}
+2025-05-18 13:37:42,027 - werkzeug - INFO - 127.0.0.1 - - [18/May/2025 13:37:42] "GET /admin/users HTTP/1.1" 200 -
+2025-05-18 13:37:44,378 - __main__ - DEBUG - Session state before route edit_user: {'_permanent': True, 'auth_method': 'manual', 'twofa_verified': True, 'user_id': 1}
+2025-05-18 13:37:44,380 - __main__ - ERROR - Unexpected error in edit_user for user_id=14: edit_user.html
+2025-05-18 13:37:44,380 - werkzeug - INFO - 127.0.0.1 - - [18/May/2025 13:37:44] "[32mGET /admin/user/14/edit HTTP/1.1[0m" 302 -
+2025-05-18 13:37:44,628 - __main__ - DEBUG - Session state before route manage_users: {'_flashes': [('error', 'Unexpected error while editing user.')], '_permanent': True, 'auth_method': 'manual', 'twofa_verified': True, 'user_id': 1}
+2025-05-18 13:37:44,635 - werkzeug - INFO - 127.0.0.1 - - [18/May/2025 13:37:44] "GET /admin/users HTTP/1.1" 200 -
+2025-05-18 13:37:50,413 - __main__ - DEBUG - Session state before route edit_user: {'_permanent': True, 'auth_method': 'manual', 'twofa_verified': True, 'user_id': 1}
+2025-05-18 13:37:50,415 - __main__ - ERROR - Unexpected error in edit_user for user_id=15: edit_user.html
+2025-05-18 13:37:50,416 - werkzeug - INFO - 127.0.0.1 - - [18/May/2025 13:37:50] "[32mGET /admin/user/15/edit HTTP/1.1[0m" 302 -
+2025-05-18 13:37:50,725 - __main__ - DEBUG - Session state before route manage_users: {'_flashes': [('error', 'Unexpected error while editing user.')], '_permanent': True, 'auth_method': 'manual', 'twofa_verified': True, 'user_id': 1}
+2025-05-18 13:37:50,732 - werkzeug - INFO - 127.0.0.1 - - [18/May/2025 13:37:50] "GET /admin/users HTTP/1.1" 200 -
+2025-05-18 13:37:52,134 - __main__ - DEBUG - Session state before route edit_user: {'_permanent': True, 'auth_method': 'manual', 'twofa_verified': True, 'user_id': 1}
+2025-05-18 13:37:52,137 - __main__ - ERROR - Unexpected error in edit_user for user_id=16: edit_user.html
+2025-05-18 13:37:52,137 - werkzeug - INFO - 127.0.0.1 - - [18/May/2025 13:37:52] "[32mGET /admin/user/16/edit HTTP/1.1[0m" 302 -
+2025-05-18 13:37:52,456 - __main__ - DEBUG - Session state before route manage_users: {'_flashes': [('error', 'Unexpected error while editing user.')], '_permanent': True, 'auth_method': 'manual', 'twofa_verified': True, 'user_id': 1}
+2025-05-18 13:37:52,464 - werkzeug - INFO - 127.0.0.1 - - [18/May/2025 13:37:52] "GET /admin/users HTTP/1.1" 200 -
+2025-05-18 13:37:53,172 - __main__ - DEBUG - Session state before route edit_user: {'_permanent': True, 'auth_method': 'manual', 'twofa_verified': True, 'user_id': 1}
+2025-05-18 13:37:53,175 - __main__ - ERROR - Unexpected error in edit_user for user_id=17: edit_user.html
+2025-05-18 13:37:53,175 - werkzeug - INFO - 127.0.0.1 - - [18/May/2025 13:37:53] "[32mGET /admin/user/17/edit HTTP/1.1[0m" 302 -
+2025-05-18 13:37:53,486 - __main__ - DEBUG - Session state before route manage_users: {'_flashes': [('error', 'Unexpected error while editing user.')], '_permanent': True, 'auth_method': 'manual', 'twofa_verified': True, 'user_id': 1}
+2025-05-18 13:37:53,492 - werkzeug - INFO - 127.0.0.1 - - [18/May/2025 13:37:53] "GET /admin/users HTTP/1.1" 200 -
+2025-05-18 13:38:46,963 - __main__ - DEBUG - Session state before route edit_user: {'_permanent': True, 'auth_method': 'manual', 'twofa_verified': True, 'user_id': 1}
+2025-05-18 13:38:46,966 - __main__ - ERROR - Unexpected error in edit_user for user_id=15: edit_user.html
+2025-05-18 13:38:46,967 - werkzeug - INFO - 127.0.0.1 - - [18/May/2025 13:38:46] "[32mGET /admin/user/15/edit HTTP/1.1[0m" 302 -
+2025-05-18 13:38:47,285 - __main__ - DEBUG - Session state before route manage_users: {'_flashes': [('error', 'Unexpected error while editing user.')], '_permanent': True, 'auth_method': 'manual', 'twofa_verified': True, 'user_id': 1}
+2025-05-18 13:38:47,291 - werkzeug - INFO - 127.0.0.1 - - [18/May/2025 13:38:47] "GET /admin/users HTTP/1.1" 200 -
+2025-05-18 13:42:04,869 - werkzeug - INFO -  * Detected change in 'C:\\Users\\Lenovo\\Documents\\data-v1\\data-v1\\Data-Integrity-Project-v1\\Data-Integrity-Project-v2\\app.py', reloading
+2025-05-18 13:42:04,985 - werkzeug - INFO -  * Restarting with stat
+2025-05-18 13:43:22,610 - werkzeug - INFO -  * Restarting with stat

@@ -1,0 +1,11 @@
+flask
+flask-sqlalchemy
+werkzeug
+authlib
+python-dotenv
+pyotp
+qrcode
+pillow
+requests
+pymysql
+waitress
